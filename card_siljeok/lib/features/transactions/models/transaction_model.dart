@@ -1,0 +1,35 @@
+// GENERATED CODE - placeholder for TransactionModel
+import 'package:hive/hive.dart';
+
+part 'transaction_model.g.dart';
+
+@HiveType(typeId: 2)
+class TransactionModel {
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final double amount;
+  @HiveField(2)
+  final String category;
+  @HiveField(3)
+  final DateTime date;
+  @HiveField(4)
+  final String status;
+  @HiveField(5)
+  final String cardId;
+  @HiveField(6)
+  final String description;
+  @HiveField(7)
+  final bool isExcluded;
+
+  TransactionModel({
+    required this.id,
+    required this.amount,
+    required this.category,
+    required this.date,
+    required this.status,
+    required this.cardId,
+    this.description = '',
+    this.isExcluded = false,
+  });
+}
