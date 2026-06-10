@@ -1,0 +1,104 @@
+Step 1.5: 카드 탭 UI 구현
+- 목표: 메인 네비게이션에 "카드" 탭을 추가하고, 사용자가 보유한 카드 리스트를 시각적으로 표시한다.
+- 구현 내용:
+  1. `lib/features/cards/screens/cards_screen.dart` 파일 생성
+  2. `AppBar`에 제목 "카드 관리" 설정
+  3. `SliverList` 혹은 `ListView.builder` 로 카드 항목을 렌더링
+  4. 카드 항목 UI: 카드 이미지, 카드 번호(마스킹), 카드 이름, 현재 한도, 사용 금액 표시
+  5. 카드 추가 버튼(`FloatingActionButton`) 배치 – 클릭 시 `AddCardScreen` 로 이동
+  6. `CardProvider`(Riverpod) 혹은 `ChangeNotifier` 를 이용해 카드 리스트 상태 관리
+  7. `SharedPreferences` 혹은 로컬 DB(`sqflite`)에 카드 데이터 영구 저장
+
+Step 1.6: 카드 상세 화면 및 거래 필터링
+- 목표: 사용자가 개별 카드를 선택했을 때 상세 정보와 해당 카드의 거래 내역을 확인한다.
+- 구현 내용:
+  1. `lib/features/cards/screens/card_detail_screen.dart` 생성
+  2. 상단에 카드 상세 정보(카드 번호, 유효기간, 은행 로고) 표시
+  3. 하단에 거래 리스트 (`TransactionItem` 재사용) 표시
+  4. 거래 필터 UI: 날짜 범위 선택, 카테고리별 필터, 금액 범위 슬라이더
+  5. 필터 적용 시 `TransactionProvider`의 `filterTransactions` 메서드 호출
+  6. 필터 결과에 따라 리스트 실시간 업데이트
+
+Step 1.7: 카드 결제 연동 API 구현
+- 목표: 외부 결제 API와 연동해 실제 결제 승인을 시뮬레이션한다.
+- 구현 내용:
+  1. `lib/services/payment_api_service.dart` 추가
+  2. `dio` 패키지 활용해 POST /payments 엔드포인트 호출 (샌드박스 URL 사용)
+  3. 결제 요청 파라미터: 카드 ID, 금액, 거래 설명, 인증 토큰
+  4. 성공/실패 응답에 따라 UI toast 혹은 dialog 표시
+  5. 결제 성공 시 `TransactionProvider`에 새로운 거래 항목 자동 추가
+  6. 에러 핸들링: 네트워크 오류, 인증 실패, 한도 초과 등 구체적인 메시지 제공
+
+Step 1.8: 테스트 및 QA
+- 유닛 테스트: 카드 CRUD, 거래 필터 로직, 결제 API 서비스 (`mockito` 활용)
+- 위젯 테스트: `CardsScreen`, `CardDetailScreen` UI 렌더링 및 인터랙션 테스트
+- 통합 테스트: 플러터 통합 테스트(`integration_test`) 로 전체 흐름 검증 (카드 추가 → 상세 보기 → 결제 → 거래 리스트 반영)
+- CI 설정: GitHub Actions에 `flutter test` 및 `flutter drive` 단계 추가
+
+Phase 2: 고도화 (자동화·UX 강화) – 기존 계획에 상세 세부 작업 추가
+
+Step 2.1: 제외 키워드 룰 엔진 연동
+- `lib/features/keyword_rule/keyword_rule_engine.dart` 구현
+- 키워드 목록을 `SharedPreferences`에 JSON 형태 저장
+- 거래 등록 시 `KeywordRuleEngine.check(transaction.description)` 호출
+- 키워드 매칭 시 `isExcluded` 플래그 자동 설정 및 UI에 “제외” 라벨 표시
+- 키워드 관리 화면(`KeywordManagementScreen`)에 추가/삭제 기능 제공
+
+Step 2.2: 카테고리별 지출 분석 차트
+- `fl_chart` 패키지 도입 및 `AnalyticsScreen`에 파이 차트·라인 차트 위젯 배치
+- `AnalyticsService.calculateCategorySpend()` 메서드 구현 (월별, 주별, 일별 aggregation)
+- 차트 터치 시 해당 카테고리 거래 리스트 팝업 표시
+- 차트 색상 테마를 다크·라이트 모드에 맞게 동적 적용
+
+Step 2.3: 생체 인증(local_auth) 통한 앱 진입 보안
+- `local_auth` 패키지 초기화 및 `AuthService.authenticate()` 구현
+- 앱 시작 시 `FutureBuilder` 로 인증 결과 확인, 실패 시 재시도 다이얼로그 제공
+- 인증 성공 시 메인 화면(`HomeScreen`)으로 이동, 인증 상태를 `Provider` 로 전역 관리
+
+Step 2.4: 다크·라이트 모드 토글
+- `ThemeProvider`에 `ThemeMode` (system, light, dark) 상태 관리
+- `AppBar`에 햇살/달 아이콘 버튼 추가 → `ThemeProvider.toggleTheme()` 호출
+- `AppColors` 및 `AppTypography`에 다크·라이트 색상 변수를 정의하고 전체 위젯에 적용
+
+Step 2.5: 테스트 자동화 및 CI/CD 파이프라인 구축
+- `flutter test`와 `flutter analyze` 명령을 GitHub Actions 워크플로에 포함
+- 성공 시 자동으로 `flutter build web` 수행 후 Firebase Hosting에 배포
+- 배포 전 `flutter test --coverage` 로 테스트 커버리지 확인, 80% 이상 유지
+
+Phase 3: 확장 (서버 도입·마이데이터)
+
+Step 3.1: Firebase Auth & Firestore 연동
+- `firebase_core`, `firebase_auth`, `cloud_firestore` 패키지 추가
+- 로그인 화면에 Google Sign‑In 및 이메일/비밀번호 로그인 옵션 제공
+- 로그인 성공 시 사용자 UID 로 `Firestore`에 `users/{uid}/transactions` 컬렉션 생성
+- 기존 로컬 DB에서 Firestore 로 데이터 마이그레이션 스크립트 구현
+
+Step 3.2: 마이데이터 API 연동 기반 마련
+- 정부·PG사 제공 REST API 사양에 맞춰 `MyDataService` 작성
+- OAuth2.0 토큰 발급 흐름 구현 (`dio` 로 토큰 요청, `flutter_secure_storage`에 저장)
+- 거래 조회, 카드 정보 조회, 결제 내역 동기화 메서드 정의
+- API 호출 전 `RequestSigner` 로 서명 헤더 생성 (HMAC 방식)
+
+Step 3.3: 데이터 동기화 UI 및 오류 복구
+- `SyncStatusBar` 위젯에 동기화 진행률 표시 및 재시도 버튼 제공
+- 동기화 실패 시 로컬에 오류 로그 저장하고, 사용자에게 알림 전송
+- 백그라운드 동기화는 `Workmanager` 플러그인 사용 (주기적 15분 실행)
+
+Step 3.4: 보안·프라이버시 강화
+- 모든 민감 데이터(액세스 토큰, 카드 번호) `flutter_secure_storage`에 암호화 저장
+- 네트워크 통신은 HTTPS(1.2 이상) 강제, Android `network_security_config.xml` 및 iOS `Info.plist`에 설정
+- 코드 난독화 및 ProGuard 규칙 추가 (Android) 
+
+Step 3.5: 다국어·현지화 지원
+- `intl` 패키지와 `arb` 파일(`app_ko.arb`, `app_en.arb`, `app_ja.arb`) 생성
+- `MaterialApp`에 `supportedLocales`와 `localizationsDelegates` 설정
+- UI 텍스트와 포맷(날짜·통화) 를 locale에 맞게 변환
+
+Step 3.6: 최종 배포 준비 및 스토어 출시
+- `flutter build apk --release` 및 `flutter build ios --release` 스크립트 작성
+- 앱 아이콘·스플래시 화면을 각각 Android `mipmap`·iOS `Assets.xcassets`에 적용
+- 버전 코드/버전 이름 관리 (`pubspec.yaml` version 필드와 CI에서 자동 증가)
+- 스토어 리뷰용 스크린샷, 개인정보 처리방침, 이용 약관 문서 준비
+
+---
+위 내용은 **Step 1.5**부터 **Phase 3**까지의 상세 개발 로드맵이며, 모든 작업은 순차적으로 진행됩니다. 필요에 따라 우선순위 조정이나 추가 기능 요청이 있으면 알려 주세요.
