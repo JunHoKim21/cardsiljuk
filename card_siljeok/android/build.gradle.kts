@@ -38,9 +38,9 @@ subprojects {
             try {
                 val androidExt = extensions.getByName("android")
                 try {
-                    androidExt.javaClass.getMethod("setCompileSdk", Int::class.java).invoke(androidExt, 34)
+                    androidExt.javaClass.getMethod("setCompileSdk", Int::class.java).invoke(androidExt, 36)
                 } catch (e: Exception) {
-                    androidExt.javaClass.getMethod("setCompileSdkVersion", Int::class.java).invoke(androidExt, 34)
+                    androidExt.javaClass.getMethod("setCompileSdkVersion", Int::class.java).invoke(androidExt, 36)
                 }
             } catch (e: Exception) {}
         }
