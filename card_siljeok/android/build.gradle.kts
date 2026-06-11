@@ -27,9 +27,24 @@ subprojects {
                     androidExt.javaClass.getMethod("setNamespace", String::class.java).invoke(androidExt, validNamespace)
                 }
             } catch (e: Exception) {}
+            
+            try {
+                val androidExt = extensions.getByName("android")
+                val compileOptions = androidExt.javaClass.getMethod("getCompileOptions").invoke(androidExt)
+                compileOptions.javaClass.getMethod("setSourceCompatibility", org.gradle.api.JavaVersion::class.java).invoke(compileOptions, org.gradle.api.JavaVersion.VERSION_17)
+                compileOptions.javaClass.getMethod("setTargetCompatibility", org.gradle.api.JavaVersion::class.java).invoke(compileOptions, org.gradle.api.JavaVersion.VERSION_17)
+            } catch (e: Exception) {}
         }
     }
     project.evaluationDependsOn(":app")
+}
+
+subprojects {
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "17"
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {
