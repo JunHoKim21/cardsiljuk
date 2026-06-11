@@ -16,6 +16,7 @@ import 'services/mock_data_service.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:flutter/foundation.dart';
 import 'features/sync/providers/sync_provider.dart';
+import 'services/notification/local_notification_service.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -56,6 +57,12 @@ Future<void> main() async {
     );
   } catch (e) {
     debugPrint('Firebase init error (Did you run flutterfire configure?): $e');
+  }
+  
+  try {
+    await LocalNotificationService().init();
+  } catch (e) {
+    debugPrint('Local Notification init error: $e');
   }
 
   await Hive.initFlutter();

@@ -58,4 +58,26 @@ class TransactionModel {
       isExcluded: map['isExcluded'] ?? false,
     );
   }
+
+  TransactionModel copyWith({
+    String? id,
+    double? amount,
+    String? category,
+    DateTime? date,
+    String? status,
+    String? cardId,
+    String? description,
+    bool? isExcluded,
+  }) {
+    return TransactionModel(
+      id: id ?? this.id,
+      amount: amount ?? this.amount,
+      category: category ?? this.category,
+      date: date ?? this.date,
+      status: status ?? this.status,
+      cardId: cardId ?? this.cardId,
+      description: description ?? this.description,
+      isExcluded: isExcluded ?? this.isExcluded,
+    );
+  }
 }
