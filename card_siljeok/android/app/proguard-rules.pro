@@ -17,3 +17,6 @@
 -keepattributes Signature
 -keepattributes InnerClasses
 -keepattributes EnclosingMethod
+
+# Flutter SplitCompat / Play Core issue
+-dontwarn com.google.android.play.core.**
