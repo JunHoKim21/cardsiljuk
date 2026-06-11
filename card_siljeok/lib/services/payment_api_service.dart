@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final paymentApiServiceProvider = Provider<PaymentApiService>((ref) {
@@ -7,6 +6,7 @@ final paymentApiServiceProvider = Provider<PaymentApiService>((ref) {
 });
 
 class PaymentApiService {
+  // ignore: unused_field
   final Dio _dio;
 
   PaymentApiService({Dio? dio})

@@ -6,6 +6,7 @@ class AppSpacing {
 
   static const double radiusLg = 16.0;
   static const double roundedSm = radiusLg; // added for compatibility
+  static const double roundedMd = 12.0;
   static const double radiusXl = 24.0;
   static const double radiusFull = 9999.0;
 }

@@ -9,7 +9,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -260,7 +259,7 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Spacer(),
-                        Text('$currentAmt / ${targetAmt}원', style: AppTypography.labelSm.copyWith(color: cs.onSurfaceVariant)),
+                        Text('$currentAmt / $targetAmt원', style: AppTypography.labelSm.copyWith(color: cs.onSurfaceVariant)),
                       ],
                     ),
                     const SizedBox(height: 8),

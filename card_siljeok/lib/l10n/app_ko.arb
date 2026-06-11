@@ -1,0 +1,12 @@
+{
+  "@@locale": "ko",
+  "appTitle": "카드 실적 메이트",
+  "homeTab": "홈",
+  "transactionsTab": "내역",
+  "analyticsTab": "통계",
+  "cardsTab": "카드",
+  "settingsTab": "설정",
+  "syncSuccess": "동기화 완료",
+  "syncError": "동기화 실패",
+  "syncing": "동기화 중..."
+}

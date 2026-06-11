@@ -10,15 +10,15 @@ class TransactionFilterWidget extends StatefulWidget {
   final double? initialMaxAmount;
 
   const TransactionFilterWidget({
-    Key? key,
+    super.key,
     this.initialDateRange,
     this.initialCategory,
     this.initialMinAmount,
     this.initialMaxAmount,
-  }) : super(key: key);
+  });
 
   @override
-  _TransactionFilterWidgetState createState() => _TransactionFilterWidgetState();
+  State<TransactionFilterWidget> createState() => _TransactionFilterWidgetState();
 }
 
 class _TransactionFilterWidgetState extends State<TransactionFilterWidget> {

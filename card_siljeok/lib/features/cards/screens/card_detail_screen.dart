@@ -9,11 +9,13 @@ import 'package:card_siljeok/features/transactions/widgets/transaction_item.dart
 import 'package:card_siljeok/features/transactions/widgets/transaction_filter_widget.dart';
 import 'package:card_siljeok/features/transactions/models/transaction_model.dart';
 import 'package:card_siljeok/services/payment_api_service.dart';
+import 'package:card_siljeok/features/analytics/providers/performance_provider.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class CardDetailScreen extends ConsumerStatefulWidget {
   final CardModel card;
-  const CardDetailScreen({Key? key, required this.card}) : super(key: key);
+  const CardDetailScreen({super.key, required this.card});
 
   @override
   ConsumerState<CardDetailScreen> createState() => _CardDetailScreenState();
@@ -115,6 +117,10 @@ class _CardDetailScreenState extends ConsumerState<CardDetailScreen> {
           minAmount: _minAmount,
           maxAmount: _maxAmount,
         );
+    
+    final perf = ref.watch(performanceProvider(widget.card.id));
+    final numFormat = NumberFormat('#,###');
+
     return Scaffold(
       appBar: AppBar(
         title: Text('카드 상세', style: AppTypography.headlineLg.copyWith(color: cs.onSurface)),
@@ -153,6 +159,48 @@ class _CardDetailScreenState extends ConsumerState<CardDetailScreen> {
                   ],
                 ),
               ],
+            ),
+            const SizedBox(height: 24),
+            // Performance Progress Bar
+            Text('실적 달성 현황', style: AppTypography.headlineSm.copyWith(color: cs.onSurface)),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.containerPadding),
+              decoration: BoxDecoration(
+                color: cs.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(AppSpacing.roundedMd),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('인정 실적', style: AppTypography.bodyLg.copyWith(color: cs.onSurfaceVariant)),
+                      Text('${numFormat.format(perf.recognizedAmount)}원', style: AppTypography.headlineSm.copyWith(color: cs.primary)),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  LinearProgressIndicator(
+                    value: perf.achievementRate,
+                    minHeight: 12,
+                    backgroundColor: cs.outlineVariant,
+                    borderRadius: BorderRadius.circular(6),
+                    valueColor: AlwaysStoppedAnimation<Color>(perf.achievementRate >= 1.0 ? AppColors.success : AppColors.primary),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('목표: ${numFormat.format(perf.targetAmount)}원', style: AppTypography.bodyMd.copyWith(color: cs.onSurfaceVariant)),
+                      if (perf.remainingAmount > 0)
+                        Text('${numFormat.format(perf.remainingAmount)}원 남음', style: AppTypography.bodyMd.copyWith(color: AppColors.error))
+                      else
+                        Text('달성 완료!', style: AppTypography.bodyMd.copyWith(color: AppColors.success)),
+                    ],
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 24),
             Text('거래 내역 (${filtered.length})', style: AppTypography.headlineSm.copyWith(color: cs.onSurface)),

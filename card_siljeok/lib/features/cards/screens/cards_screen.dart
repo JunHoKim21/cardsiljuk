@@ -8,7 +8,7 @@ import 'package:card_siljeok/features/cards/providers/card_provider.dart';
 import 'package:card_siljeok/features/cards/widgets/card_item.dart';
 
 class CardsScreen extends ConsumerWidget {
-  const CardsScreen({Key? key}) : super(key: key);
+  const CardsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

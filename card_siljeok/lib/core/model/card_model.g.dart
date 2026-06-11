@@ -22,13 +22,15 @@ class CardModelAdapter extends TypeAdapter<CardModel> {
       amount: fields[2] as double,
       date: fields[3] as DateTime,
       category: fields[4] as String,
+      targetAmount: fields[5] as double,
+      excludedCategories: (fields[6] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, CardModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +40,11 @@ class CardModelAdapter extends TypeAdapter<CardModel> {
       ..writeByte(3)
       ..write(obj.date)
       ..writeByte(4)
-      ..write(obj.category);
+      ..write(obj.category)
+      ..writeByte(5)
+      ..write(obj.targetAmount)
+      ..writeByte(6)
+      ..write(obj.excludedCategories);
   }
 
   @override

@@ -8,7 +8,7 @@ import 'package:card_siljeok/features/transactions/widgets/transaction_item.dart
 import 'package:card_siljeok/features/analytics/services/analytics_service.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
-  const AnalyticsScreen({Key? key}) : super(key: key);
+  const AnalyticsScreen({super.key});
 
   @override
   ConsumerState<AnalyticsScreen> createState() => _AnalyticsScreenState();

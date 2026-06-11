@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "494110855091",
+    "firebase_url": "https://jhkim-2bdca.firebaseio.com",
+    "project_id": "jhkim-2bdca",
+    "storage_bucket": "jhkim-2bdca.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494110855091:android:dfe4983cf86b7b6d1c85c6",
+        "android_client_info": {
+          "package_name": "com.siljeok.card_siljeok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "494110855091-1rtuomn2asvu2j9tfe83u1kk8r1tme22.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvAxwyhar1b-aNrVDkGfn4BlHlpp0lclI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494110855091-1rtuomn2asvu2j9tfe83u1kk8r1tme22.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

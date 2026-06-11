@@ -6,7 +6,7 @@ import 'package:card_siljeok/features/transactions/models/transaction_model.dart
 
 class TransactionItem extends StatelessWidget {
   final TransactionModel transaction;
-  const TransactionItem({Key? key, required this.transaction}) : super(key: key);
+  const TransactionItem({super.key, required this.transaction});
 
   @override
   Widget build(BuildContext context) {

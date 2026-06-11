@@ -1,30 +1,32 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/material.dart';
 
 import '../models/transaction_model.dart';
 import '../../keyword_rule/keyword_rule_engine.dart';
-
-/// Hive box name for transactions
-const String _transactionsBoxName = 'transactions';
+import '../../../services/firestore_service.dart';
 
 class TransactionProvider extends StateNotifier<List<TransactionModel>> {
   final Ref ref;
+  final FirestoreService _firestoreService = FirestoreService();
+  StreamSubscription<List<TransactionModel>>? _subscription;
+
   TransactionProvider(this.ref) : super([]) {
-    _loadTransactions();
+    _init();
   }
 
-  // Load transactions from Hive when provider is created
-  Future<void> _loadTransactions() async {
-    final box = await Hive.openBox<TransactionModel>(_transactionsBoxName);
-    state = box.values.toList();
-    // Listen for changes and update state accordingly.
-    box.watch().listen((event) {
-      state = box.values.toList();
+  void _init() {
+    _subscription = _firestoreService.streamTransactions().listen((transactions) {
+      state = transactions;
     });
   }
 
-  /// Add a new transaction and persist it.
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
   Future<void> addTransaction(TransactionModel transaction) async {
     final engine = ref.read(keywordRuleEngineProvider.notifier);
     final isExcluded = engine.check(transaction.description);
@@ -40,24 +42,20 @@ class TransactionProvider extends StateNotifier<List<TransactionModel>> {
       isExcluded: isExcluded,
     );
 
-    final box = Hive.box<TransactionModel>(_transactionsBoxName);
-    await box.add(finalTransaction);
-    // State will be updated via watcher.
+    await _firestoreService.saveTransaction(finalTransaction);
   }
 
-  /// Remove a transaction by its Hive key.
   Future<void> removeTransaction(int key) async {
-    final box = Hive.box<TransactionModel>(_transactionsBoxName);
-    await box.delete(key);
+    if (key >= 0 && key < state.length) {
+      final id = state[key].id;
+      await _firestoreService.deleteTransaction(id);
+    }
   }
 
-  /// Update an existing transaction at the given key.
   Future<void> updateTransaction(int key, TransactionModel transaction) async {
-    final box = Hive.box<TransactionModel>(_transactionsBoxName);
-    await box.put(key, transaction);
+    await _firestoreService.saveTransaction(transaction);
   }
 
-  /// Get transactions filtered by optional criteria.
   List<TransactionModel> filterTransactions({
     String? cardId,
     DateTimeRange? dateRange,
@@ -80,7 +78,6 @@ class TransactionProvider extends StateNotifier<List<TransactionModel>> {
   }
 }
 
-/// Riverpod provider for the TransactionProvider.
 final transactionProvider = StateNotifierProvider<TransactionProvider, List<TransactionModel>>((ref) {
   return TransactionProvider(ref);
 });

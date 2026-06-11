@@ -13,6 +13,7 @@ class AppColors {
 
   // Tertiary & Error (주의/경고)
   static const Color error = Color(0xFFBA1A1A);
+  static const Color success = Color(0xFF006C49);
 
   // Surface & Background (배경 및 카드)
   static const Color background = Color(0xFFF8F9FA);

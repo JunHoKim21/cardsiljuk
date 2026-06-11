@@ -6,7 +6,7 @@ import 'package:card_siljeok/core/theme/app_spacing.dart';
 import '../keyword_rule_engine.dart';
 
 class KeywordManagementScreen extends ConsumerStatefulWidget {
-  const KeywordManagementScreen({Key? key}) : super(key: key);
+  const KeywordManagementScreen({super.key});
 
   @override
   ConsumerState<KeywordManagementScreen> createState() => _KeywordManagementScreenState();

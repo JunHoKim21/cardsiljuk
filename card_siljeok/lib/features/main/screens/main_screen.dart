@@ -3,7 +3,9 @@ import '../../cards/screens/cards_screen.dart';
 import '../../transactions/screens/transactions_screen.dart';
 import '../../analytics/screens/analytics_screen.dart';
 import 'settings_screen.dart';
-import '../../../core/theme/app_colors.dart';
+import '../widgets/home_screen.dart';
+import '../../sync/widgets/sync_status_bar.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -16,7 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const Scaffold(body: Center(child: Text('홈 화면'))),
+    const HomeScreen(),
     const TransactionsScreen(),
     const AnalyticsScreen(),
     const CardsScreen(),
@@ -27,7 +29,14 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SyncStatusBar(),
+            Expanded(child: _screens[_currentIndex]),
+          ],
+        ),
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (index) {

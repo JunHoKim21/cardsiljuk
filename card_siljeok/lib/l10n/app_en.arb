@@ -1,0 +1,12 @@
+{
+  "@@locale": "en",
+  "appTitle": "Card Siljeok Mate",
+  "homeTab": "Home",
+  "transactionsTab": "History",
+  "analyticsTab": "Analytics",
+  "cardsTab": "Cards",
+  "settingsTab": "Settings",
+  "syncSuccess": "Sync Complete",
+  "syncError": "Sync Failed",
+  "syncing": "Syncing..."
+}

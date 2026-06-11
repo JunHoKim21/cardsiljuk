@@ -32,4 +32,30 @@ class TransactionModel {
     this.description = '',
     this.isExcluded = false,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'amount': amount,
+      'category': category,
+      'date': date.toIso8601String(),
+      'status': status,
+      'cardId': cardId,
+      'description': description,
+      'isExcluded': isExcluded,
+    };
+  }
+
+  factory TransactionModel.fromMap(Map<String, dynamic> map, String id) {
+    return TransactionModel(
+      id: id,
+      amount: (map['amount'] ?? 0.0).toDouble(),
+      category: map['category'] ?? '',
+      date: DateTime.parse(map['date'] ?? DateTime.now().toIso8601String()),
+      status: map['status'] ?? '',
+      cardId: map['cardId'] ?? '',
+      description: map['description'] ?? '',
+      isExcluded: map['isExcluded'] ?? false,
+    );
+  }
 }

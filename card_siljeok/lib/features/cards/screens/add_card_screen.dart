@@ -7,7 +7,7 @@ import 'package:card_siljeok/core/model/card_model.dart';
 import 'package:card_siljeok/features/cards/providers/card_provider.dart';
 
 class AddCardScreen extends ConsumerStatefulWidget {
-  const AddCardScreen({Key? key}) : super(key: key);
+  const AddCardScreen({super.key});
 
   @override
   ConsumerState<AddCardScreen> createState() => _AddCardScreenState();
@@ -18,12 +18,16 @@ class _AddCardScreenState extends ConsumerState<AddCardScreen> {
   final _nameController = TextEditingController();
   final _amountController = TextEditingController();
   final _categoryController = TextEditingController();
+  final _targetAmountController = TextEditingController();
+  final _excludedCategoriesController = TextEditingController();
 
   @override
   void dispose() {
     _nameController.dispose();
     _amountController.dispose();
     _categoryController.dispose();
+    _targetAmountController.dispose();
+    _excludedCategoriesController.dispose();
     super.dispose();
   }
 
@@ -31,13 +35,22 @@ class _AddCardScreenState extends ConsumerState<AddCardScreen> {
     if (!_formKey.currentState!.validate()) return;
     final name = _nameController.text.trim();
     final amount = double.tryParse(_amountController.text.trim()) ?? 0;
+    final targetAmount = double.tryParse(_targetAmountController.text.trim()) ?? 0;
     final category = _categoryController.text.trim();
+    final excludedCategories = _excludedCategoriesController.text
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+
     final newCard = CardModel(
       id: const Uuid().v4(),
       cardName: name,
       amount: amount,
       date: DateTime.now(),
       category: category,
+      targetAmount: targetAmount,
+      excludedCategories: excludedCategories,
     );
     await ref.read(cardProvider.notifier).addCard(newCard);
     if (mounted) Navigator.of(context).pop();
@@ -75,6 +88,18 @@ class _AddCardScreenState extends ConsumerState<AddCardScreen> {
                 controller: _categoryController,
                 decoration: InputDecoration(labelText: '카테고리'),
                 validator: (v) => (v == null || v.isEmpty) ? '입력 필요' : null,
+              ),
+              const SizedBox(height: AppSpacing.stackGapMd),
+              TextFormField(
+                controller: _targetAmountController,
+                decoration: InputDecoration(labelText: '실적 목표 금액 (예: 300000)'),
+                keyboardType: TextInputType.number,
+                validator: (v) => (v != null && v.isNotEmpty && double.tryParse(v) == null) ? '숫자를 입력하세요' : null,
+              ),
+              const SizedBox(height: AppSpacing.stackGapMd),
+              TextFormField(
+                controller: _excludedCategoriesController,
+                decoration: InputDecoration(labelText: '제외 카테고리 (쉼표로 구분)'),
               ),
               const Spacer(),
               ElevatedButton(
