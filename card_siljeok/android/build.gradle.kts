@@ -34,6 +34,15 @@ subprojects {
                 compileOptions.javaClass.getMethod("setSourceCompatibility", org.gradle.api.JavaVersion::class.java).invoke(compileOptions, org.gradle.api.JavaVersion.VERSION_17)
                 compileOptions.javaClass.getMethod("setTargetCompatibility", org.gradle.api.JavaVersion::class.java).invoke(compileOptions, org.gradle.api.JavaVersion.VERSION_17)
             } catch (e: Exception) {}
+            
+            try {
+                val androidExt = extensions.getByName("android")
+                try {
+                    androidExt.javaClass.getMethod("setCompileSdk", Int::class.java).invoke(androidExt, 34)
+                } catch (e: Exception) {
+                    androidExt.javaClass.getMethod("setCompileSdkVersion", Int::class.java).invoke(androidExt, 34)
+                }
+            } catch (e: Exception) {}
         }
     }
     project.evaluationDependsOn(":app")
